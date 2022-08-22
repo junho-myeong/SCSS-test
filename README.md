@@ -89,7 +89,11 @@
 ```
 
 ## 변수
+- 변수의 유효 범위가 잇다. 변수가 선언된 후에 중괄호 밖에 선언하면, 전역 변수로 사용하고
+- 선택자 안에서 사용하게 되면, 그 중괄호 내부가 유효 범위가 된다.
+- 값에 재할당도 가능하다, 범위가 동일하다면 재할당된 후에 바뀐 값이 적용이 된다.
 - $size: 100px;
+
 ``` SCSS
 $size: 200px;
 .container {
@@ -102,6 +106,151 @@ $size: 200px;
     }
 }
 ```
+
+## 산술연산
+- 기본적으로 단위가 동일해야한다.
+- 그래서 이렇게 단위가 다를때는 calc함수를 통해서 연산을 해주면 된다.
+``` SCSS
+div {
+    width: 20px + 20px;
+    height: 40px - 10px;
+    font-size : 10px * 2;
+    margin: 30px / 2;
+    padding: 20px % 7;
+}
+
+div {
+    width: 20px + 20px;
+    height: 40px - 10px;
+    font-size : 10px * 2;
+    margin: (30px / 2);
+    padding: 20px % 7;
+}
+// 나누기 연산자를 사용할때 단축속성으로 사용되느것을 막아 줘야한다.
+span {
+    $size: 100px;
+    font-size: 10px;
+    line-height: 10px;
+    // 폰트 관련 단축속성은 font라는 단축 속성이 가능하다. 앞 폰트 사이트, 뒤에는 line-height
+    // 단축속성을 사용할때는 / 기호로 구분해서 사용하기 때문에 산술연산으로 받아 들이지 못한다.
+    // () 소괄호를 통해서 사용한다.
+    // 변수를 사용해서 나누기를 한다.
+    // 다른 연산자와 같이 사용한다.
+    font: 10px / 10px; 
+    margin: $size / 2;
+    padding: 10px + 2px / 2;
+}
+```
+
+## 재활용(mixin)
+- 예를들어 가운데 정렬을 하는 코드를 재활용 할수 잇다.
+- 변수와 유사하다.
+```SCSS
+@mixin center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    @include center;
+    .item {
+        @include center;
+    }
+}
+.box {
+    @include center;
+}
+// 재활용을 할때 인수를 통해서 같은 구조를 가진 코드에서 그 값을 다르게 사용할수도 잇다.
+// JS에서 함수를 선언하고 호출하는것과 똑같은 방법이다.
+@mixin box($size: 100px, $color: tomato) { // 기존에 100px이 기본값이 라면 : 을 통해서 지정해 둘수 잇다.
+    width: $size;
+    height: $size;
+    background-color: $color;
+}
+
+.container {
+    @include box(200px, red);
+    .item {
+        @include box($color: green); // 기본적으로 매개변수의 순서에 따라서 그값이 할당 되는데, 기본값은 그대로 두고 싶다면 키워드 인수를 사용한다.
+    }
+}
+
+.box {
+    @include box;
+}
+```
+
+## 반복문
+``` SCSS
+// for(let i = 0; i < 10; i++) {
+//     console.log('test')
+// }
+
+// 오버워치 프로젝트에서 캐릭터 이미지를 삽입 할때 사용하면 편하게 사용할수 잇다.
+@for $i from 1 through 10 {
+    // 제로 베이스가 아니다.
+    // 보관법을 사용해서 변수를 사용할수 잇는데 JS와 다르게 #으로 보관법을 사용한다.
+    .box:nth-child(#{$i}) {
+        width: 100px * $i;
+    }
+}
+```
+
+## 함수
+``` SCSS
+// CSS에 속성과 값을 재활용 하는 용도로 사용할때는 mixin을 사용하고
+@mixin center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// 실제로 값을 따로 연산해서 반환된 결과로 사용할때 사용한다.
+@function ratio($size, $ratio) {
+    @return $size * $ratio
+}
+
+.box {
+    $width: 100px;
+    width: $width;
+    height: ratio($width, 9/16);
+    @include center;
+}
+```
+
+## 색상 내장함수
+``` SCSS
+.box {
+ $color: red;
+ width: 200px;
+ height: 100px;
+ margin: 20px;
+ border-radius: 10px;
+ background-color: $color;
+ &.built-in {
+     // 색상을 섞어 새로운 색상을 리턴 해주는 함수이다.
+     background: mix($color, royalblue);
+     // 색상을 10퍼센트만큼 밝게 해준다.(hover효과에서 많이 사용한다.)
+     background: lighten($color, 10%);
+     // 색상을 어둡게 해준다.(hover에서 효과를 줄때 많이 사용한다.)
+     background: darken($color, 10%);
+     // 채도를 더 높여 준다.
+     background: saturate($color, 10%);
+     // 색상에 채도를 낮춰준다.
+     background: desaturate($color, 10%);
+     // 주어진 색상을 회색으로 만들어 준다.
+     background: grayscale($color);
+     // 생삭을 반전 시켜준다.
+     background: invert($color);
+     // rgba(색상에서 투명도를 추가해준다.)
+     background: rgba($color, .5);
+     
+ }
+}
+```
+
+
+
 
 
 
