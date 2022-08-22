@@ -1,18 +1,9 @@
-// SCSS에서 제공하는 변수라는 개념이다.
+@import "./sub", "/sub2";
+
 $color: royalblue;
 
 .container {
-  // SCSS에서 제공해주는 중첩이라는 기능이다.
-  ul {
-    li {
-      .name {
-        color: $color;
-        /*font-size: 60px;*/
-        //background-color: orange;
-      }
-      .age {
-
-      }
-    }
+  h1 {
+    color: $color;
   }
 }

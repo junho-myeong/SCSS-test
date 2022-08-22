@@ -249,8 +249,92 @@ span {
 }
 ```
 
+## 가져오기
+- @import 에서 url함수를 따로 사용하지 않고 경로만 지정해도 된다.
+- 확장자 또한 표현해 주지 않아도 된다.
+- 쉽표로 구분해서 여러개의 파일을 가져 올수도 잇다.
+``` SCSS
+@import "./sub", "/sub2";
 
+$color: royalblue;
 
+.container {
+  h1 {
+    color: $color;
+  }
+}
+```
+## overwatch project refactoring
+
+## 데이터종류
+``` SCSS
+$number: 1; // .5, 100px, 1em
+$string: bold; // relative, "../images/a.png"
+$color: red; // blue, #ffff00, rgba(0,0,0,.1) - 색상 데이터이다, 문자 데이터가 아니다.
+$boolean: true; //false
+$null: null;
+$list: orange, royalblue, yellow; //JS에 배열과 비슷하게 ,로 구분해서 순서대로 사용하는것
+$map: ( //JS에서 객체 데이터와 유사하게 key,value 형태로 구성한다.
+    o:orange,
+    r:royalblue,
+    y:yellow
+)
+
+.box {
+    width: 100px; //number 타입
+    color: red; // color 타입
+    position: relative; // string 타입
+}
+```
+## 반복문 @each
+``` SCSS
+$list: orange, royalblue, yellow; //JS에 배열과 비슷하게 ,로 구분해서 순서대로 사용하는것
+$map: ( //JS에서 객체 데이터와 유사하게 key,value 형태로 구성한다.
+    o:orange,
+    r:royalblue,
+    y:yellow
+);
+
+@each $c in $list {
+    .box {
+        color: $c;
+    }
+}
+
+@each $key, $value in $map {
+    .box-#{$key} {
+        color: $value;
+    }
+}
+```
+
+## 재활용@content
+``` SCSS
+@mixin left-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    // mixin을 사용할때 기본적인 사항에 특이한 사항을 추가해야하는경우에는 content를 사용해서 
+    // 밑에서 추가적인 내용을 더해서 사용할수 잇게 해준다.
+    @content;
+}
+
+.container {
+    width: 100px;
+    height: 100px;
+    @include left-top;
+}
+
+.box {
+    width: 200px;
+    height: 300px;
+    @include left-top {
+        bottom: 0;
+        right: 0;
+        margin: auto;
+    }
+}
+```
 
 
 

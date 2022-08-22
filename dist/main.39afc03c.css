@@ -1,6 +1,13 @@
-.container ul li .name {
+body .container {
+  background-color: orange;
+}
+
+body {
+  background-color: red;
+}
+
+.container h1 {
   color: royalblue;
-  /*font-size: 60px;*/
 }
 
 /*# sourceMappingURL=/main.39afc03c.css.map */
