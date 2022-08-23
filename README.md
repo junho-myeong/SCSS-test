@@ -290,7 +290,7 @@ $map: ( //JS에서 객체 데이터와 유사하게 key,value 형태로 구성�
 $list: orange, royalblue, yellow; //JS에 배열과 비슷하게 ,로 구분해서 순서대로 사용하는것
 $map: ( //JS에서 객체 데이터와 유사하게 key,value 형태로 구성한다.
     o:orange,
-    r:royalblue,
+    r:red,
     y:yellow
 );
 
